@@ -273,8 +273,8 @@ function HomePage() {
                       </div>
                     </div>
                     <button onClick={() => startEdit(t)} className="text-sm text-slate-400 hover:text-indigo-600">Edit</button>
-                    <button onClick={() => remove([t.id])} className="text-slate-300 hover:text-red-500" aria-label="Delete">
-                      ✕
+                    <button onClick={() => remove([t.id])} className="text-sm text-slate-400 hover:text-red-500" aria-label="Delete">
+                      Delete
                     </button>
                   </li>
                 );
