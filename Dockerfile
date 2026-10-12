@@ -6,6 +6,10 @@ RUN npm install
 COPY . .
 # If this app reads any VITE_* variables, declare an ARG + ENV pair for each
 # one HERE, before the build — Vite inlines import.meta.env.VITE_* at build time.
+ARG VITE_SUPABASE_URL
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 RUN npx vite build
 
 # Serve stage — static files behind nginx with SPA fallback
