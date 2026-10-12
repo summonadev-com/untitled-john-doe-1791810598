@@ -170,7 +170,7 @@ function HomePage() {
               aria-label="Toggle dark mode"
               className="rounded-lg bg-white px-3 py-2 text-sm shadow hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
-              {dark ? '☀️ Light' : '🌙 Dark'}
+              {dark ? 'Light' : 'Dark'}
             </button>
           </div>
         </div>
