@@ -33,6 +33,16 @@ function HomePage() {
   const [editDue, setEditDue] = useState('');
   const [editPriority, setEditPriority] = useState<Priority>('medium');
 
+  const [dark, setDark] = useState<boolean>(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
@@ -74,15 +84,24 @@ function HomePage() {
   const remaining = todos.filter((t) => !t.done).length;
   const doneCount = todos.length - remaining;
 
-  const inputCls = 'rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-indigo-400';
+  const inputCls = 'rounded-lg border border-slate-200 bg-transparent px-3 py-2 outline-none dark:border-slate-600 dark:text-slate-100 focus:border-indigo-400';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white dark:from-slate-900 dark:to-slate-950 px-4 py-12">
       <div className="mx-auto max-w-xl">
-        <h1 className="text-3xl font-bold text-slate-800">My Tasks</h1>
+        <div className="flex items-start justify-between">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">My Tasks</h1>
+          <button
+            onClick={() => setDark(!dark)}
+            aria-label="Toggle dark mode"
+            className="rounded-lg bg-white px-3 py-2 text-sm shadow hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+          >
+            {dark ? '☀️ Light' : '🌙 Dark'}
+          </button>
+        </div>
         <p className="mb-6 text-slate-500">{remaining} task{remaining === 1 ? '' : 's'} left</p>
 
-        <form onSubmit={add} className="mb-6 flex flex-wrap gap-2 rounded-xl bg-white p-3 shadow">
+        <form onSubmit={add} className="mb-6 flex flex-wrap gap-2 rounded-xl bg-white p-3 dark:bg-slate-800 shadow">
           <input value={text} onChange={(e) => setText(e.target.value)} placeholder="What needs doing?" className={`min-w-0 flex-1 ${inputCls}`} />
           <input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={`${inputCls} text-slate-600`} />
           <select value={priority} onChange={(e) => setPriority(e.target.value as Priority)} className={`${inputCls} text-slate-600`}>
@@ -94,12 +113,12 @@ function HomePage() {
         </form>
 
         <div className="mb-4 flex items-center justify-between">
-          <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
+          <div className="flex gap-1 rounded-lg bg-slate-100 p-1 dark:bg-slate-800">
             {(['all', 'active', 'completed'] as Filter[]).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-md px-3 py-1 text-sm capitalize ${filter === f ? 'bg-white font-medium text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                className={`rounded-md px-3 py-1 text-sm capitalize ${filter === f ? 'bg-white font-medium text-indigo-600 dark:bg-slate-600 dark:text-white shadow-sm' : 'text-slate-500'}`}
               >
                 {f}
               </button>
@@ -118,7 +137,7 @@ function HomePage() {
             const p = t.priority ?? 'medium';
             if (editingId === t.id) {
               return (
-                <li key={t.id} className="flex flex-wrap gap-2 rounded-xl bg-white p-3 shadow-sm">
+                <li key={t.id} className="flex flex-wrap gap-2 rounded-xl bg-white p-3 dark:bg-slate-800 shadow-sm">
                   <input
                     autoFocus
                     value={editText}
@@ -141,7 +160,7 @@ function HomePage() {
               );
             }
             return (
-              <li key={t.id} className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm">
+              <li key={t.id} className="flex items-center gap-3 rounded-xl bg-white p-3 dark:bg-slate-800 shadow-sm">
                 <input
                   type="checkbox"
                   checked={t.done}
@@ -149,7 +168,7 @@ function HomePage() {
                   className="h-5 w-5 accent-indigo-600"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className={t.done ? 'text-slate-400 line-through' : 'text-slate-800'}>{t.text}</p>
+                  <p className={t.done ? 'text-slate-400 line-through' : 'text-slate-800 dark:text-slate-100'}>{t.text}</p>
                   <div className="mt-0.5 flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-xs capitalize ${PRIORITY_STYLE[p]}`}>{p}</span>
                     {t.due && (
